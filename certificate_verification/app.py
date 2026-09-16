@@ -1,10 +1,11 @@
-from flask import Flask
+from fastapi import FastAPI
+from routes.certificate_routes import router
 
-app = Flask(__name__)
+app = FastAPI(title="RPC Certificate Verification")
 
-@app.route("/")
+app.include_router(router)
+
+
+@app.get("/")
 def home():
-    return "Certificate Verification Module is Running!"
-
-if __name__ == "__main__":
-    app.run(debug=True)
+    return {"message": "Certificate Verification Module is Running"}
