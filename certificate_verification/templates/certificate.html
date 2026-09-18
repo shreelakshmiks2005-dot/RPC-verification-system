@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate Verification</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+```
+<header>
+    <h1>Certificate Verification System</h1>
+    <p>Verify certificate authenticity using QR codes, official sources and certificate data.</p>
+</header>
+
+<section class="upload-card">
+
+    <div class="upload-box" id="uploadBox">
+        <div class="upload-icon">📄</div>
+
+        <h2>Upload Certificate</h2>
+
+        <p>PDF, PNG, JPG, JPEG, WEBP, BMP or TIFF</p>
+
+        <input type="file" id="certificateFile"
+               accept=".pdf,.png,.jpg,.jpeg,.webp,.bmp,.tiff,.tif">
+
+        <label for="certificateFile" class="choose-btn">
+            Choose Certificate
+        </label>
+
+        <p id="fileName">No file selected</p>
+    </div>
+
+    <button id="verifyBtn" class="verify-btn">
+        Verify Certificate
+    </button>
+
+    <div id="loading" class="loading hidden">
+        <div class="spinner"></div>
+        <p>Verifying certificate...</p>
+    </div>
+
+    <div id="error" class="error hidden"></div>
+
+</section>
+
+<section id="resultSection" class="result-section hidden">
+
+    <div id="statusCard" class="status-card">
+        <div id="statusIcon" class="status-icon">✓</div>
+        <div>
+            <h2 id="statusText">Certificate Verified</h2>
+            <p id="statusMessage">The certificate passed the verification checks.</p>
+        </div>
+    </div>
+
+    <div class="details-card">
+
+        <h2>Certificate Details</h2>
+
+        <div class="details-grid">
+
+            <div class="detail">
+                <span>Candidate Name</span>
+                <strong id="candidateName">-</strong>
+            </div>
+
+            <div class="detail">
+                <span>Course</span>
+                <strong id="course">-</strong>
+            </div>
+
+            <div class="detail">
+                <span>Issuer</span>
+                <strong id="issuer">-</strong>
+            </div>
+
+            <div class="detail">
+                <span>Date</span>
+                <strong id="date">-</strong>
+            </div>
+
+            <div class="detail">
+                <span>Certificate ID</span>
+                <strong id="certificateId">-</strong>
+            </div>
+
+            <div class="detail">
+                <span>File</span>
+                <strong id="fileNameResult">-</strong>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="verification-card">
+
+        <h2>Verification Results</h2>
+
+        <div class="checks">
+
+            <div class="check">
+                <span>Name Match</span>
+                <span id="nameMatch" class="badge">-</span>
+            </div>
+
+            <div class="check">
+                <span>Course Match</span>
+                <span id="courseMatch" class="badge">-</span>
+            </div>
+
+            <div class="check">
+                <span>Date Match</span>
+                <span id="dateMatch" class="badge">-</span>
+            </div>
+
+            <div class="check">
+                <span>Certificate ID Match</span>
+                <span id="idMatch" class="badge">-</span>
+            </div>
+
+            <div class="check">
+                <span>QR Verification</span>
+                <span id="qrVerification" class="badge">-</span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="score-card">
+
+        <h2>Certificate Trust Score</h2>
+
+        <div class="score-circle">
+            <span id="score">--</span>
+            <small>/ 100</small>
+        </div>
+
+        <p>Based on the available certificate verification checks.</p>
+
+    </div>
+
+    <div class="qr-card">
+
+        <h2>QR / Verification Source</h2>
+
+        <div id="qrData">
+            No QR data available.
+        </div>
+
+    </div>
+
+</section>
+
+</div>
+
+<script src="/static/script.js"></script>
+
+</body>
+</html>

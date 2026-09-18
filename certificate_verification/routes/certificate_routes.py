@@ -6,9 +6,11 @@ from services.ocr_service import extract_text
 from services.parser_service import parse_certificate_text
 
 from services.qr_service import decode_qr
-from services.verification_service import verify_qr_data
+from services.verification_service import verify_qr_data, verify_official_source
 
 from database.db import find_certificate
+
+from services.trust_score_service import calculate_certificate_score
 
 router = APIRouter()
 
@@ -41,20 +43,34 @@ async def upload_certificate(file: UploadFile = File(...)):
         verification = None
 
         if qr_results:
+
             qr_data = qr_results[0]
 
-            if "issued_to" in qr_data:
+            if qr_data.get("type") == "url":
+
+                verification = verify_official_source(
+                    qr_data.get("url"),
+                    certificate_data
+        )
+
+
+            elif qr_data.get("type") == "verifiable_credential":
+
                 verification = verify_qr_data(
                     qr_data,
                     certificate_data
-                )
-
+            )
+                
         database_record = find_certificate(certificate_data)
 
         database_match = False
 
         if database_record:
             database_match = True
+
+        certificate_score = calculate_certificate_score(
+            verification or {}
+        )
 
     except Exception as e:
         raise HTTPException(
@@ -68,5 +84,6 @@ async def upload_certificate(file: UploadFile = File(...)):
         "certificate": certificate_data,
         "qr_data": qr_results,
         "verification": verification,
-        "database_match": database_match
+        "database_match": database_match,
+        "certificate_score": certificate_score
     }
