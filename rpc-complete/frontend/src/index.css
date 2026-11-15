@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+@keyframes pulse-ring {
+  0% { transform: scale(0.95); opacity: 0.7; }
+  70% { transform: scale(1.05); opacity: 0.3; }
+  100% { transform: scale(0.95); opacity: 0.7; }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes count-up {
+  from { opacity: 0; transform: scale(0.7); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.animate-fade-up   { animation: fade-up 0.4s ease both; }
+.animate-count-up  { animation: count-up 0.5s cubic-bezier(.34,1.56,.64,1) both; }
+.animate-pulse-ring { animation: pulse-ring 1.5s ease-in-out infinite; }
