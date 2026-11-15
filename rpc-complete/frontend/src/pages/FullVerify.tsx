@@ -6,14 +6,14 @@ import ResultCard from '../components/ResultCard'
 
 export default function FullVerify() {
   const [form, setForm] = useState({
-    candidate_id: 'demo_full_01',
-    candidate_name: 'Jane Doe',
-    github_username: 'octocat',
-    repo_link: 'https://github.com/octocat/Hello-World',
+    candidate_id: `full_${Date.now()}`,
+    candidate_name: '',
+    github_username: '',
+    repo_link: '',
     project_type: 'individual',
     required_skills: 'python, react, sql',
     preferred_skills: 'docker, aws',
-    expected_course: 'Machine Learning Specialization',
+    expected_course: '',
     verify_online: false,
   })
   const [resumeFile, setResumeFile] = useState<File | null>(null)
@@ -84,9 +84,9 @@ export default function FullVerify() {
             <div className="w-5 h-5 rounded-full bg-gray-800 text-white flex items-center justify-center text-xs font-bold">1</div>
             <p className="text-sm font-bold text-gray-700">Candidate Info</p>
           </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div><label className={lc}>Candidate ID</label><input required className={ic} value={form.candidate_id} onChange={set('candidate_id')} /></div>
-            <div><label className={lc}>Full Name</label><input required className={ic} value={form.candidate_name} onChange={set('candidate_name')} /></div>
+          <div>
+            <label className={lc}>Full Name</label>
+            <input required className={ic} value={form.candidate_name} onChange={set('candidate_name')} placeholder="e.g. Shreelakshmi K S" />
           </div>
         </div>
 

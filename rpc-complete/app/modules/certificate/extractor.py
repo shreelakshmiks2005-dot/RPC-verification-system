@@ -108,40 +108,41 @@ class CertificateExtractor:
                 raise ImportError("Install PyMuPDF: pip install PyMuPDF")
 
     async def _extract_from_pdf_bytes(self, content: bytes) -> ExtractedCertificate:
-        """Extract from PDF bytes."""
-        # First try pdfplumber for text-based PDFs (no OCR needed)
+        """Extract from PDF bytes — text extraction + QR from rendered image."""
+        text = ""
+        qr_data = None
+
+        # Step 1: Try pdfplumber for text
         try:
             import pdfplumber
-            import io
             with pdfplumber.open(io.BytesIO(content)) as pdf:
                 text = pdf.pages[0].extract_text() or ""
-            if len(text.strip()) > 30:  # Got real text
-                return self._parse_certificate_text(text, qr_data=None)
         except Exception:
             pass
 
-        # Then try PyMuPDF to render page as image → OCR
+        # Step 2: Render PDF page as image for QR decoding (always do this)
         try:
             import fitz
             doc = fitz.open(stream=content, filetype="pdf")
             page = doc[0]
-            pix = page.get_pixmap(matrix=fitz.Matrix(2, 2))  # 2x scale for better OCR
+            pix = page.get_pixmap(matrix=fitz.Matrix(2, 2))
             img_data = pix.tobytes("png")
             doc.close()
 
             from PIL import Image
-            import io
             image = Image.open(io.BytesIO(img_data))
-            return await self._process_image(image)
-        except ImportError:
-            try:
-                import pdfplumber
-                import io
-                with pdfplumber.open(io.BytesIO(content)) as pdf:
-                    text = pdf.pages[0].extract_text() or ""
-                return self._parse_certificate_text(text, qr_data=None)
-            except ImportError:
-                raise ImportError("Install PyMuPDF: pip install PyMuPDF")
+
+            # Always try QR decode from rendered image
+            qr_data = self._decode_qr(image)
+
+            # If no text from pdfplumber, try OCR on image
+            if len(text.strip()) < 30:
+                text = self._ocr_image(image)
+
+        except Exception:
+            pass
+
+        return self._parse_certificate_text(text, qr_data)
 
     async def _process_image(self, image) -> ExtractedCertificate:
         """Process image: OCR + QR code extraction."""

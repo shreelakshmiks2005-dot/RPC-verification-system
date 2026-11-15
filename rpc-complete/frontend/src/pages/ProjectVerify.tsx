@@ -15,8 +15,7 @@ const DEMO_PRESETS = [
 
 export default function ProjectVerify() {
   const [form, setForm] = useState({
-    candidate_id: 'demo_02',
-    candidate_name: 'Octocat',
+    candidate_name: '',
     github_username: 'octocat',
     repo_link: 'https://github.com/octocat/Hello-World',
     project_type: 'individual',
@@ -41,7 +40,10 @@ export default function ProjectVerify() {
       else clearInterval(interval)
     }, 600)
     try {
-      const data = await verifyProject(form)
+      const data = await verifyProject({
+        ...form,
+        candidate_id: `cand_${Date.now()}`,
+      })
       clearInterval(interval)
       setSteps(stepMsgs)
       setResult(data)
@@ -90,15 +92,9 @@ export default function ProjectVerify() {
       </div>
 
       <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-gray-200 p-6 space-y-4 shadow-sm">
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Candidate ID</label>
-            <input required className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-gray-50 focus:bg-white transition" value={form.candidate_id} onChange={set('candidate_id')} placeholder="cand_001" />
-          </div>
-          <div>
-            <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Candidate Name</label>
-            <input required className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-gray-50 focus:bg-white transition" value={form.candidate_name} onChange={set('candidate_name')} placeholder="Jane Doe" />
-          </div>
+        <div>
+          <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Candidate Name</label>
+          <input required className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-gray-50 focus:bg-white transition" value={form.candidate_name} onChange={set('candidate_name')} placeholder="Jane Doe" />
         </div>
         <div>
           <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">GitHub Username</label>

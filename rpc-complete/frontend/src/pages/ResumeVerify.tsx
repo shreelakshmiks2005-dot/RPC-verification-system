@@ -4,8 +4,7 @@ import ResultCard from '../components/ResultCard'
 
 export default function ResumeVerify() {
   const [form, setForm] = useState({
-    candidateId: 'demo_01',
-    candidateName: 'Jane Doe',
+    candidateName: '',
     requiredSkills: 'python, react, sql',
     preferredSkills: 'docker, kubernetes, aws',
   })
@@ -19,7 +18,13 @@ export default function ResumeVerify() {
     if (!file) { setError('Please upload a resume file (PDF, DOCX, or TXT).'); return }
     setLoading(true); setError(''); setResult(null)
     try {
-      const data = await verifyResume(form.candidateId, form.candidateName, form.requiredSkills, form.preferredSkills, file)
+      const data = await verifyResume(
+        `cand_${Date.now()}`,
+        form.candidateName,
+        form.requiredSkills,
+        form.preferredSkills,
+        file,
+      )
       setResult(data)
     } catch (err: any) {
       const detail = err?.response?.data?.detail
@@ -37,15 +42,9 @@ export default function ResumeVerify() {
       </div>
 
       <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-gray-200 p-6 space-y-4 shadow-sm">
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Candidate ID</label>
-            <input required className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 bg-gray-50 focus:bg-white transition" value={form.candidateId} onChange={e => setForm(f => ({ ...f, candidateId: e.target.value }))} placeholder="cand_001" />
-          </div>
-          <div>
-            <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Candidate Name</label>
-            <input required className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 bg-gray-50 focus:bg-white transition" value={form.candidateName} onChange={e => setForm(f => ({ ...f, candidateName: e.target.value }))} placeholder="Jane Doe" />
-          </div>
+        <div>
+          <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Candidate Name</label>
+          <input required className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 bg-gray-50 focus:bg-white transition" value={form.candidateName} onChange={e => setForm(f => ({ ...f, candidateName: e.target.value }))} placeholder="e.g. Shreelakshmi K S" />
         </div>
 
         <div>
